@@ -3,7 +3,7 @@
 技术栈：`react` `umi3.x` `antd-mobile` `typescript`
 
 ## 功能列表
-- [x] git message 校验
+- [x] git commit message 规范方案
 - [x] eslint+prettier代码格式化
 - [x] 高清方案配置(移动端适配)
 - [x] 应用多环境管理
