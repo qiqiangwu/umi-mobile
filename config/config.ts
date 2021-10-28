@@ -1,15 +1,31 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
+import plugins from './plugins';
+import themeConfig from './theme.config';
 
 /**
  * umi 公共配置
  */
 export default defineConfig({
+  plugins: plugins,
   nodeModulesTransform: {
     type: 'none',
   },
   routes: routes,
   fastRefresh: {},
+  hd: {
+    theme: themeConfig,
+    px2rem: {
+      rootValue: 50, // 开启hd后需要换算：rootValue=designWidth*100/750,此处设计稿为375，所以375*100/750=50
+      propBlackList: [
+        'border-top-width',
+        'border-left-width',
+        'border-right-width',
+        'border-bottom-width',
+      ], // 这些属性不需要转换
+      selectorBlackList: ['no_hd'], // 以包含no_hd的class不需要转换
+    },
+  },
   antd: {
     mobile: false,
   },
