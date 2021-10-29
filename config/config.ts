@@ -2,6 +2,7 @@ import { defineConfig } from 'umi';
 import routes from './routes';
 import plugins from './plugins';
 import themeConfig from './theme.config';
+import babelConfig from './babel.config';
 
 /**
  * umi 公共配置
@@ -29,8 +30,17 @@ export default defineConfig({
   antd: {
     mobile: false,
   },
+  extraBabelPlugins: babelConfig,
   define: {
     'process.env.UMI_ENV': process.env.UMI_ENV,
+  },
+  lessLoader: {
+    modifyVars: {
+      hack: 'true; @import "~@/styles/index.less";',
+    },
+  },
+  cssLoader: {
+    localsConvention: 'camelCase',
   },
   chunks: ['vendors', 'umi'],
   chainWebpack(config) {
