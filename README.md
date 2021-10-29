@@ -26,15 +26,13 @@
 
 不需要单独在每个页面单独引入
 
-也可在`config/theme.config.ts`下修改`antd-mobile`变量值
-
 例子:
 ```less
 .page{
   display: flex;
   font-size: 15px;
-  color: @brand-primary; // antd-mobile主题变量 并且在config/theme.config.ts 修改过
-  background-color: @brand-important; // antd-mobile主题变量 默认没有修改过
+  color: var(--adm-color-primary); // antd-mobile主题变量 并且在config/theme.config.ts 修改过
+  background-color: var(--adm-color-white); // antd-mobile主题变量 默认没有修改过
   .ellipsis(); // styles/mixins/util.less 的工具样式
 }
 ```

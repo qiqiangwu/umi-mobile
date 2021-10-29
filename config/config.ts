@@ -1,7 +1,6 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
 import plugins from './plugins';
-import themeConfig from './theme.config';
 import babelConfig from './babel.config';
 
 /**
@@ -15,7 +14,6 @@ export default defineConfig({
   routes: routes,
   fastRefresh: {},
   hd: {
-    theme: themeConfig,
     px2rem: {
       rootValue: 50, // 开启hd后需要换算：rootValue=designWidth*100/750,此处设计稿为375，所以375*100/750=50
       propBlackList: [
