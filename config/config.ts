@@ -28,6 +28,7 @@ export default defineConfig({
   antd: {
     mobile: false,
   },
+  dva: {},
   extraBabelPlugins: babelConfig,
   define: {
     'process.env.UMI_ENV': process.env.UMI_ENV,

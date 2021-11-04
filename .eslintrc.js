@@ -2,9 +2,11 @@ module.exports = {
   extends: [require.resolve('osdoc-lint/dist/eslint')],
   globals: {},
   rules: {
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', 'tsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-wrap-multilines': 0,
     'react/prop-types': 0,
+    'react/require-default-props': 0,
+    "react/default-props-match-prop-types": 0,
     'react/forbid-prop-types': 0,
     'react/jsx-one-expression-per-line': 0,
     'import/no-extraneous-dependencies': [2, { optionalDependencies: true }],
@@ -27,5 +29,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 0,
     'global-require': 0,
+    'import/extensions': 0,
   },
 };
