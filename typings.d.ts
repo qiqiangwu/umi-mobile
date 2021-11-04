@@ -8,3 +8,7 @@ declare module '*.svg' {
   const url: string;
   export default url;
 }
+
+interface AnyObject {
+  [propName: string]: any;
+}

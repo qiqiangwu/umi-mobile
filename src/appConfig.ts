@@ -16,7 +16,7 @@ const appConfig: DefaultConfig = {
   axiosTimeout: 10000,
   axiosCookie: true,
   axiosBaseUrl: '/api',
-  enableSentry: true,
+  enableSentry: false,
 };
 
 export default appConfig;
