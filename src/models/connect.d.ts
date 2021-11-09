@@ -1,5 +1,10 @@
+import { IAppModelState } from '@/.umi/plugin-dva/connect';
+import { IUserModelState } from '@/models/user';
+
 export interface ConnectState {
   loading: Loading;
+  user?: IUserModelState;
+  app?: IAppModelState;
 }
 
 export interface Loading {
@@ -7,6 +12,7 @@ export interface Loading {
   effects: { [key: string]: boolean | undefined };
   models: {
     app?: boolean;
+    user?: boolean;
   };
 }
 

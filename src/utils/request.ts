@@ -5,6 +5,15 @@ import { getCookie, setCookie } from '@/utils/cookie';
 import { HttpCode } from '@/common';
 import { ServerApiErrorInfo } from '@/common/types';
 import appConfig, { DefaultConfig } from '../appConfig';
+import Logger from './logger';
+
+export interface IFormatResponse<P> {
+  data?: P;
+  message?: string;
+  hasError: boolean;
+}
+
+const logger = Logger.get('utils/request');
 
 const { axiosBaseUrl, axiosCookie, axiosTimeout }: DefaultConfig = appConfig;
 
@@ -52,42 +61,25 @@ function requestFail(error: any) {
 }
 
 function responseSuccess(response: AxiosResponse) {
-  const { headers, data, config } = response;
-  if (headers.token) {
-    setCookie('token', headers.token);
-  }
-  const { url = '' } = config;
-
-  const { code, hasError, data: resData, message } = data;
-  if (code !== HttpCode.SUCCESS || hasError) {
-    errorReport(url, message, config, response);
-    if (code === HttpCode.FAIL || hasError) {
-      return Toast.show({
-        icon: 'fail',
-        content: message || '系统异常,请联系管理员',
-      });
-    }
-    if (code === HttpCode.WARN) {
-      return Toast.show({
-        icon: 'fail',
-        content: message || '系统警告,请注意检查',
-      });
-    }
-    if (code === HttpCode.NO_LOGIN) {
-      Toast.show({
-        icon: 'fail',
-        content: '未登录或登录已过期，请重新登录。',
-      });
-      return getDvaApp()?._store?.dispatch({
-        type: 'user/fetchLogout',
-      });
-    }
-  }
-  return resData;
+  const { data } = response;
+  return formatResponse<any>({
+    hasError: false,
+    data,
+  });
 }
 
 function responseFail(error: AxiosError) {
-  return Promise.reject(error);
+  const { baseURL, url } = error.config;
+  const { name, message } = error;
+
+  logger.error(`接口${baseURL}${url}报错: ${name} ${message}`);
+
+  return Promise.reject(
+    formatResponse({
+      hasError: true,
+      message: `${name} ${message}`,
+    }),
+  );
 }
 
 // 添加拦截器
@@ -107,7 +99,7 @@ export const Get = (url: string, params?: object, config?: AxiosRequestConfig) =
   request(
     Object.assign({}, config, {
       url,
-      params: { ...params, _t: new Date().getTime() },
+      params: { ...params },
       method: 'get',
     }),
   );
@@ -138,3 +130,19 @@ export const Delete = (url: string, data?: object, config?: AxiosRequestConfig) 
       method: 'delete',
     }),
   );
+
+export function formatResponse<P>({
+  hasError,
+  data,
+  message,
+}: IFormatResponse<P>): IFormatResponse<P> {
+  const response = { hasError };
+  if (data != null) {
+    Object.assign(response, { data });
+  }
+  if (message) {
+    Object.assign(response, { message });
+  }
+
+  return response;
+}

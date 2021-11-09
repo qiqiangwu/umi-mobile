@@ -1,0 +1,34 @@
+.container {
+  padding: 16px;
+  padding-top: 0;
+  a {
+    display: block;
+    margin-bottom: 10px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0b6b42;
+    text-align: center;
+    margin-bottom: 16px;
+
+    span {
+      padding: 0 24px;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 24vw;
+      height: 1px;
+      vertical-align: middle;
+      background-image: radial-gradient(#0b6b42, #e7f8f0);
+    }
+  }
+}

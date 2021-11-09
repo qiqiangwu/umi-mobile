@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
 import plugins from './plugins';
-import babelConfig from './babel.config';
+import proxyConfig from './proxy.config';
 
 /**
  * umi 公共配置
@@ -29,10 +29,10 @@ export default defineConfig({
     mobile: false,
   },
   dva: {},
-  extraBabelPlugins: babelConfig,
   define: {
     'process.env.UMI_ENV': process.env.UMI_ENV,
   },
+  proxy: proxyConfig,
   lessLoader: {
     modifyVars: {
       hack: 'true; @import "~@/styles/index.less";',

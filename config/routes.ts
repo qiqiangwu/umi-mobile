@@ -5,7 +5,7 @@
 const routes = [
   {
     path: '/',
-    component: '@/layouts/BasicLayout',
+    component: '@/layouts/MainLayout',
     routes: [
       {
         path: '/',
@@ -25,6 +25,12 @@ const routes = [
             title: '二级导航',
           },
         ],
+      },
+      {
+        path: '/course-list/:columnID/:name',
+        title: '课程列表',
+        name: 'courseList',
+        component: '@/pages/course/CourseList',
       },
       {
         path: '/my',

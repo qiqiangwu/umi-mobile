@@ -1,0 +1,29 @@
+@prefix-cls: ~'main-layout';
+
+.@{prefix-cls} {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &-body {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+  }
+  &-main {
+  }
+  &-main-inner {
+    position: absolute;
+    left: 0;
+    top: 45px;
+    right: 0;
+    bottom: 0;
+
+    overflow-y: auto;
+  }
+  &-bottom {
+    flex: 0;
+    border-top: solid 1px var(--adm-border-color);
+  }
+}

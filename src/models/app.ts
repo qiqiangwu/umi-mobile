@@ -1,7 +1,13 @@
 import { Reducer, Effect } from 'umi';
 
+export interface ICurrentArea {
+  id: number;
+  name: string;
+}
+
 export interface IAppModelState {
   appStatus: string;
+  currentArea?: ICurrentArea;
 }
 
 export interface IAppModel {

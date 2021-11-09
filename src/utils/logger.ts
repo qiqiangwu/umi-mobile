@@ -15,8 +15,9 @@ Logger.useDefaults({
   defaultLevel: Logger.DEBUG,
 });
 
-Logger.setHandler((messages, context) => {
-  // Send messages to a custom logging endpoint for analysis.
-});
+// Send messages to a custom logging endpoint for analysis.
+/* Logger.setHandler((messages, context) => {
+
+}); */
 
 export default Logger;

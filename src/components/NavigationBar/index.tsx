@@ -6,6 +6,7 @@ import React from 'react';
 import { NavBar } from 'antd-mobile';
 import { history } from 'umi';
 import { NavigationBarOption } from '@/common/types';
+import styles from './index.less';
 
 export interface NavigationBarProps {
   title: string;
@@ -15,6 +16,7 @@ export interface NavigationBarProps {
 export interface NavigationBarState {
   leftContent?: React.ReactNode;
   rightContent?: React.ReactNode;
+  title?: string;
 }
 
 class NavigationBar extends React.PureComponent<NavigationBarProps, NavigationBarState> {
@@ -40,10 +42,15 @@ class NavigationBar extends React.PureComponent<NavigationBarProps, NavigationBa
     });
   };
 
-  render() {
-    const { title } = this.props;
+  setTitle = (title: string) => {
+    this.setState({
+      title,
+    });
+  };
 
+  render() {
     const { rightContent, leftContent } = this.state;
+    const title = this.state?.title || this.props?.title;
 
     const rightContentRender = () => {
       if (rightContent && typeof rightContent !== 'string') {
@@ -61,14 +68,16 @@ class NavigationBar extends React.PureComponent<NavigationBarProps, NavigationBa
     };
 
     return (
-      <NavBar
-        left={leftContentRender()}
-        backArrow={leftContent ? null : true}
-        onBack={this.onLeftClick}
-        right={rightContentRender()}
-      >
-        {title}
-      </NavBar>
+      <div className={styles.container}>
+        <NavBar
+          left={leftContentRender()}
+          backArrow={leftContent ? null : true}
+          onBack={this.onLeftClick}
+          right={rightContentRender()}
+        >
+          {title}
+        </NavBar>
+      </div>
     );
   }
 }

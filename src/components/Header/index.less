@@ -1,0 +1,63 @@
+.header {
+  --height: 64px;
+  --border-bottom: none;
+  display: flex;
+  align-items: center;
+  height: var(--height);
+  border-bottom: var(--border-bottom);
+  padding: 16px 12px;
+  white-space: nowrap;
+  background: url(./images/banna-top-bg.png) no-repeat left top;
+  background-size: 100% auto;
+}
+.logo {
+  flex: 0;
+  height: 32px;
+
+  img {
+    height: 100%;
+    width: auto;
+  }
+}
+.changeArea {
+  flex: 1;
+  height: 32px;
+  margin: 0 10px;
+  padding: 0 8px;
+  background: rgba(58, 58, 58, 0.24);
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  span {
+    font-size: 14px;
+    color: var(--adm-color-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 200;
+
+    &::before {
+      content: '';
+      width: 1px;
+      height: 16px;
+      display: inline-block;
+      background-color: rgba(235, 235, 235, 0.8);
+      opacity: 0.3;
+      margin: 0 5px;
+      vertical-align: middle;
+    }
+  }
+}
+.scan {
+  flex: 0;
+
+  img {
+    width: 32px;
+    height: 32px;
+    fill: var(--adm-color-white);
+  }
+}
