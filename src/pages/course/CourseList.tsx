@@ -148,19 +148,20 @@ const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = fals
         >
           {catalogList?.[2]
             ? catalogList?.[2]?.map(item => (
-                <Tabs.TabPane title={item.name} key={`${item.id}`}>
-                  <List>
-                    {courseList.map(course => (
-                      <List.Item key={course.id}>{course.name}</List.Item>
-                    ))}
-                  </List>
-                  <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
-                    <InfiniteScrollContent hasMore={hasMore} />
-                  </InfiniteScroll>
-                </Tabs.TabPane>
+                <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
               ))
             : null}
         </Tabs>
+        <div className={styles.list}>
+          <List>
+            {courseList.map(course => (
+              <List.Item key={course.id}>{course.name}</List.Item>
+            ))}
+          </List>
+          <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
+            <InfiniteScrollContent hasMore={hasMore} />
+          </InfiniteScroll>
+        </div>
       </div>
     </LoadingToast>
   );
