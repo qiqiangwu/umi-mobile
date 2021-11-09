@@ -1,9 +1,5 @@
 import Axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { Toast } from 'antd-mobile';
-import { getDvaApp } from 'umi';
 import { getCookie, setCookie } from '@/utils/cookie';
-import { HttpCode } from '@/common';
-import { ServerApiErrorInfo } from '@/common/types';
 import appConfig, { DefaultConfig } from '../appConfig';
 
 const { axiosBaseUrl, axiosCookie, axiosTimeout }: DefaultConfig = appConfig;

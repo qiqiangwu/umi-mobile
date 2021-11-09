@@ -8,6 +8,7 @@ import babelConfig from './babel.config';
  */
 export default defineConfig({
   plugins: plugins,
+  mfsu: {},
   nodeModulesTransform: {
     type: 'none',
   },
@@ -43,22 +44,23 @@ export default defineConfig({
   },
   chunks: ['vendors', 'umi'],
   chainWebpack(config) {
-    config.merge({
-      optimization: {
-        minimize: true,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            vendors: {
-              name: 'vendors',
-              test({ resource }) {
-                return /[\\/]node_modules[\\/]/.test(resource);
+    process.env.UMI_ENV === 'prod' &&
+      config.merge({
+        optimization: {
+          minimize: true,
+          splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+              vendors: {
+                name: 'vendors',
+                test({ resource }) {
+                  return /[\\/]node_modules[\\/]/.test(resource);
+                },
+                priority: 10,
               },
-              priority: 10,
             },
           },
         },
-      },
-    });
+      });
   },
 });
