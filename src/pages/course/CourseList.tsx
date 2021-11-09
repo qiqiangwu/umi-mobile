@@ -16,17 +16,17 @@ interface CatalogListProps extends ConnectProps {
 }
 
 const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => (
-    <>
-      {hasMore ? (
-        <>
-          <span>加载中</span>
-          <AntdLoading />
-        </>
-      ) : (
-        <span>--- 我是有底线的 ---</span>
-      )}
-    </>
-  );
+  <>
+    {hasMore ? (
+      <>
+        <span>加载中</span>
+        <AntdLoading />
+      </>
+    ) : (
+      <span>--- 我是有底线的 ---</span>
+    )}
+  </>
+);
 
 const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = false, match }) => {
   const dispatch = useDispatch();
@@ -154,9 +154,9 @@ const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = fals
                       <List.Item key={course.id}>{course.name}</List.Item>
                     ))}
                   </List>
-                  {/* <InfiniteScroll loadMore={loadMore} hasMore={hasMore}>
+                  <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
                     <InfiniteScrollContent hasMore={hasMore} />
-                  </InfiniteScroll> */}
+                  </InfiniteScroll>
                 </Tabs.TabPane>
               ))
             : null}
