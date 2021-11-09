@@ -1,15 +1,15 @@
-import { get, remove, set } from 'js-cookie';
+import Cookies from 'js-cookie';
 
 const cookieKey = 'umiMobileCookie';
 
 export function getCookie(name?: string) {
-  return get(name || cookieKey);
+  return Cookies.get(name || cookieKey);
 }
 
 export function setCookie(name: string, value: string | object) {
-  set(name || cookieKey, value);
+  Cookies.set(name || cookieKey, value);
 }
 
 export function removeCookie(name?: string) {
-  remove(name || cookieKey);
+  Cookies.remove(name || cookieKey);
 }
