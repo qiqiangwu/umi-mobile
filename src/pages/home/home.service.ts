@@ -21,7 +21,7 @@ export function fetchColumnList(columnID: number, areaID: string) {
         const slides: ISlide[] = data
           .filter(item => item.displayType === 'topAdvert')
           .map(item => ({
-            image: item.displayContent,
+            image: `${item.displayContent}?t=${Date.now()}`,
             id: item.id,
           }));
 

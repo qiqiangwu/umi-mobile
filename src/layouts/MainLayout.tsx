@@ -4,7 +4,6 @@ import { ConnectState } from '@/models/connect';
 import Logger from '@/utils/logger';
 import { formatterMenu, getMenuRoute } from '@/utils/utils';
 import NavigationBar from '@/components/NavigationBar';
-import Header from '@/components/Header';
 import { navigationRef } from '@/utils/nav';
 import './MainLayout.less';
 
@@ -36,10 +35,7 @@ const MainLayout: React.FC<MainLayoutProps> = props => {
   if (menuRoute.indexOf(pathname) >= 0) {
     return (
       <div className={prefixCls}>
-        <div className={`${prefixCls}-body`}>
-          <Header></Header>
-          {children}
-        </div>
+        <div className={`${prefixCls}-body`}>{children}</div>
       </div>
     );
   }

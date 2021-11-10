@@ -19,6 +19,8 @@ export interface IColumn {
 }
 
 export interface IHomeState {
+  // 是否获取栏目数据
+  init?: boolean;
   slides?: ISlide[];
   columns?: IColumn[];
 }
@@ -39,12 +41,23 @@ const HomeModel = {
   state: {},
   effects: {
     *fetchColumnList({ payload }, { put, call }) {
-      const response = yield call(fetchColumnList, payload.id, payload.areaID);
-      yield put({
-        type: 'save',
-        payload: response.data || {},
-      });
-      return response;
+      const { id, areaID, resolve, reject } = payload;
+      const response = yield call(fetchColumnList, id, areaID);
+      if (!response.hasError) {
+        yield put({
+          type: 'save',
+          payload: response.data
+            ? {
+                ...response.data,
+                init: true,
+              }
+            : {},
+        });
+      }
+
+      if (resolve) {
+        resolve(response);
+      }
     },
   },
   reducers: {

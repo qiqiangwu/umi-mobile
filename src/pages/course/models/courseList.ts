@@ -1,4 +1,5 @@
-import { Effect, Reducer } from 'umi';
+import { Effect, Reducer, Subscription } from 'umi';
+import _ from 'lodash';
 import { fetchCourseCatalog, fetchCourseList, IMedia } from '../course.service';
 import Logger from '@/utils/logger';
 import { IFormatResponse } from '@/utils/request';
@@ -34,15 +35,21 @@ export interface ICourseListModel {
   };
   reducers: {
     save: Reducer<ICourseListState>;
+    reset: Reducer<ICourseCatalog>;
+  };
+  subscriptions: {
+    setup: Subscription;
   };
 }
 
+const defaultState = {
+  catalogList: [[], [], []],
+  selectedCatalogIDs: [],
+};
+
 const CourseListModel: ICourseListModel = {
   namespace: 'courseList',
-  state: {
-    catalogList: [[], [], []],
-    selectedCatalogIDs: [],
-  },
+  state: _.cloneDeep(defaultState),
   effects: {
     /**
      * 获取课程目录
@@ -244,6 +251,18 @@ const CourseListModel: ICourseListModel = {
         ...state,
         ...payload,
       };
+    },
+    reset(state) {
+      return _.cloneDeep(defaultState);
+    },
+  },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      logger.debug('subscription setup history: ', history);
+      return history.listen(params => {
+        logger.debug('subscription setup listen history params: ', params);
+        logger.debug('subscription setup listen history: ', history);
+      });
     },
   },
 };

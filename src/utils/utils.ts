@@ -76,3 +76,17 @@ export const getRouteAuthority = (path: string, routeData: any[]) => {
   });
   return authorities;
 };
+
+/**
+ * TODO: 未完成
+ * Promise延时
+ * @param fn
+ * @param ms 延时毫秒数
+ * @returns
+ */
+export const delay = (fn: () => Promise<any>, ms: number) => new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      const result = await fn();
+      resolve(result);
+    }, ms);
+  });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect, ConnectProps, useDispatch } from 'umi';
+import { connect, ConnectProps, useDispatch, useHistory } from 'umi';
 import { InfiniteScroll, List, Loading as AntdLoading, Tabs } from 'antd-mobile';
 import Logger from '@/utils/logger';
 import { ICourseListState } from './models/courseList';
@@ -28,7 +28,12 @@ const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => (
   </>
 );
 
-const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = false, match }) => {
+const CatalogListPage: React.FC<CatalogListProps> = ({
+  data = {},
+  loading = false,
+  match,
+  history,
+}) => {
   const dispatch = useDispatch();
   const [hasMore, setHasMore] = useState(true);
 
@@ -42,6 +47,10 @@ const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = fals
     coursePageIndex = 1,
     coursePageCount = 0,
   } = data;
+
+  useEffect(() => {
+    logger.debug('history: ', history);
+  }, [history]);
 
   useEffect(() => {
     logger.debug('match', match);
@@ -155,7 +164,9 @@ const CatalogListPage: React.FC<CatalogListProps> = ({ data = {}, loading = fals
         <div className={styles.list}>
           <List>
             {courseList.map(course => (
-              <List.Item key={course.id}>{course.name}</List.Item>
+              <List.Item key={course.id} onClick={() => history.push('/my')}>
+                {course.name}
+              </List.Item>
             ))}
           </List>
           <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
