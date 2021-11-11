@@ -19,6 +19,9 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
+  dynamicImport: {
+    loading: '@/components/Loading',
+  },
   routes: routes,
   fastRefresh: {},
   hd: {
