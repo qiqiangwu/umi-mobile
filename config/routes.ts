@@ -30,7 +30,7 @@ const routes = [
         path: '/my',
         title: '我的',
         name: 'my',
-        isMenu: true,
+        isMenu: false,
         component: '@/pages/mine',
       },
     ],
