@@ -2,6 +2,14 @@
 
 技术栈：`react` `umi3.x` `antd-mobile` `typescript`
 
+- [umi](https://umijs.org/)
+- [antd-mobile](https://mobile.ant.design/) 
+- [typescript](https://www.typescriptlang.org/)
+
+umi集成的插件
+- [dva](https://dvajs.com/)
+- [umi-plugin-keep-alive](https://github.com/alitajs/umi-plugin-keep-alive)
+
 ## 功能列表
 - [x] git commit message 规范方案
 - [x] eslint+prettier代码格式化
@@ -14,6 +22,7 @@
 - [x] `h5`内部导航封装
 - [x] 引入`js-Logger`日志库
 - [x] 请求二次封装
+- [ ] 引入状态保持组件
 - [ ] 权限封装
 - [ ] 使用`Sentry`进行异常监控
 - [ ] `analyze`打包资源分析
@@ -27,36 +36,8 @@
 
 不需要单独在每个页面单独引入
 
-例子:
-```less
-.page{
-  display: flex;
-  font-size: 15px;
-  color: var(--adm-color-primary); // antd-mobile主题变量 并且在config/theme.config.ts 修改过
-  background-color: var(--adm-color-white); // antd-mobile主题变量 默认没有修改过
-  .ellipsis(); // styles/mixins/util.less 的工具样式
-}
-```
 
-组件应用样式参考[https://github.com/gajus/babel-plugin-react-css-modules]
+## Issues
+- umi-plugin-keep-alive
 
-```
-import React from 'react';
-import './table.less';
-
-export default class Table extends React.Component {
-  render () {
-    return <div styleName='table'>
-      <div styleName='row'>
-        <div styleName='cell'>A0</div>
-        <div styleName='cell'>B0</div>
-      </div>
-    </div>;
-  }
-}
-```
-
-全局样式和组件样式
-```
-<div className='global-css' styleName='local-module'></div>
-```
+useActivate, useUnActivate hooks不起作用
