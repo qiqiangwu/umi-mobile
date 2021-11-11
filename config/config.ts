@@ -2,6 +2,13 @@ import { defineConfig } from 'umi';
 import routes from './routes';
 import plugins from './plugins';
 import proxyConfig from './proxy.config';
+import appConfig, { DefaultConfig } from '../src/appConfig';
+
+const { enableVConsole }: DefaultConfig = appConfig;
+
+const headScripts = enableVConsole
+  ? ['https://cdn.staticfile.org/vConsole/3.3.4/vconsole.min.js']
+  : [];
 
 /**
  * umi 公共配置
@@ -36,6 +43,7 @@ export default defineConfig({
   define: {
     'process.env.UMI_ENV': process.env.UMI_ENV,
   },
+  headScripts: [...headScripts],
   proxy: proxyConfig,
   lessLoader: {
     modifyVars: {
