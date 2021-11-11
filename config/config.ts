@@ -1,7 +1,6 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
 import plugins from './plugins';
-import babelConfig from './babel.config';
 import proxyConfig from './proxy.config';
 import appConfig, { DefaultConfig } from '../src/appConfig';
 
@@ -38,7 +37,6 @@ export default defineConfig({
     mobile: false,
   },
   dva: {},
-  extraBabelPlugins: babelConfig,
   define: {
     'process.env.UMI_ENV': process.env.UMI_ENV,
   },
