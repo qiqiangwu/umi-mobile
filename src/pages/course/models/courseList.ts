@@ -1,5 +1,6 @@
 import { Effect, Reducer, Subscription } from 'umi';
 import _ from 'lodash';
+import axios, { Canceler } from 'axios';
 import { fetchCourseCatalog, fetchCourseList, IMedia } from '../course.service';
 import Logger from '@/utils/logger';
 import { IFormatResponse } from '@/utils/request';
@@ -42,6 +43,18 @@ export interface ICourseListModel {
   };
 }
 
+// 存放接口取消请求的标识
+let axiosCancel: Canceler[] = [];
+// 取消请求
+function cancel() {
+  logger.debug('cancel', axiosCancel);
+  axiosCancel.forEach(c => {
+    c();
+  });
+
+  axiosCancel = [];
+}
+
 const defaultState = {
   catalogList: [[], [], []],
   selectedCatalogIDs: [],
@@ -58,6 +71,8 @@ const CourseListModel: ICourseListModel = {
      * @param param1
      */
     *fetchCourseCatalog({ payload }, { put, call, select }) {
+      cancel();
+
       // 一级目录父目录的level为-1
       const { level = -1, resolve, columnID: cid } = payload;
       // 起始目录级别
@@ -101,6 +116,10 @@ const CourseListModel: ICourseListModel = {
           catalogList.push(catalogListItem);
         });
       }
+
+      const cancelTokenHandler = c => {
+        axiosCancel.push(c);
+      };
 
       for (let currentLevel = startLevel; currentLevel < 3; currentLevel += 1) {
         // 构造三级目录
@@ -159,7 +178,10 @@ const CourseListModel: ICourseListModel = {
           break;
         }
 
-        const response = yield call(fetchCourseCatalog, columnID);
+        const cancelToken = new axios.CancelToken(cancelTokenHandler);
+        const response = yield call(fetchCourseCatalog, columnID, '', {
+          cancelToken,
+        });
 
         logger.debug('fetchCourseCatalog effect response:', response);
 
@@ -228,6 +250,11 @@ const CourseListModel: ICourseListModel = {
         columnID,
         pageIndex,
         pageSize,
+        config: {
+          cancelToken: new axios.CancelToken(c => {
+            axiosCancel.push(c);
+          }),
+        },
       });
 
       if (!response.hasError) {

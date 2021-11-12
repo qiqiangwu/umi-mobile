@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { Get } from '@/utils/request';
 
 export interface GetAutoPageContentParams {
@@ -13,6 +14,7 @@ export interface GetAutoPageContentParams {
    * 终端类型
    */
   terminalIdentify?: 'PHONE' | 'JDH';
+  config?: AxiosRequestConfig;
 }
 
 /**
@@ -24,10 +26,11 @@ export function getAutoPageContent({
   columnID,
   areaID,
   terminalIdentify = 'PHONE',
+  config,
 }: GetAutoPageContentParams) {
   let url = `/ancms_server_interface/autoPageServlet/getAutoPageContent?columnId=${columnID}&terminalIdentify=${terminalIdentify}`;
   if (areaID != null) {
     url += `&areaId=${areaID}`;
   }
-  return Get(url);
+  return Get(url, {}, config);
 }

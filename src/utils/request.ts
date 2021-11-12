@@ -1,5 +1,5 @@
 import Axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { getCookie, setCookie } from '@/utils/cookie';
+import { getCookie } from '@/utils/cookie';
 import appConfig, { DefaultConfig } from '../appConfig';
 import Logger from './logger';
 
@@ -47,8 +47,11 @@ function requestSuccess(config: any) {
   if (cookie) {
     defaultHeader.Token = cookie;
   }
+
   // eslint-disable-next-line no-param-reassign
   config.headers = { ...defaultHeader, ...config.headers };
+
+  logger.debug('request success config: ', config);
   return config;
 }
 
