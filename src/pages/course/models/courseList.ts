@@ -45,6 +45,7 @@ export interface ICourseListModel {
 const defaultState = {
   catalogList: [[], [], []],
   selectedCatalogIDs: [],
+  initLoadCourseList: true,
 };
 
 const CourseListModel: ICourseListModel = {
@@ -185,22 +186,39 @@ const CourseListModel: ICourseListModel = {
     },
     /**
      * 获取课程列表
-     * @param payload {columnID, loadMore, pageIndex, pageSize, resolve, reject}
+     * @param payload {columnID, pageSize, resolve, reject}
      * @param param1
      */
     *fetchCourseList({ payload }, { call, put, select }) {
-      const { columnID, loadMore, pageIndex, pageSize, resolve, reject } = payload;
+      const { columnID, pageSize, loadMore, resolve = () => {} } = payload;
+
+      let pageIndex;
 
       if (!loadMore) {
-        // 初始化数据
+        // 初始化课程列表相关数据
         yield put({
           type: 'save',
           payload: {
+            initLoadCourseList: false,
             coursePageCount: 0,
             courseList: [],
             coursePageIndex: 1,
           },
         });
+
+        pageIndex = 1;
+      } else {
+        const prevPageIndex = yield select(({ courseList }) => courseList.coursePageIndex);
+        pageIndex = prevPageIndex + 1;
+
+        // 判断是否有更多数据
+        const coursePageCount = yield select(({ courseList }) => courseList.coursePageCount);
+        if (pageIndex > coursePageCount) {
+          return resolve({
+            pageIndex,
+            pageCount: coursePageCount,
+          });
+        }
       }
 
       const response: IFormatResponse<{
@@ -237,11 +255,10 @@ const CourseListModel: ICourseListModel = {
           },
         });
 
-        resolve &&
-          resolve({
-            pageIndex,
-            pageCount,
-          });
+        resolve({
+          pageIndex,
+          pageCount,
+        });
       }
     },
   },

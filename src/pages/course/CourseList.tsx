@@ -13,6 +13,7 @@ const logger = Logger.get('course list');
 interface CatalogListProps extends ConnectProps {
   data: ICourseListState;
   loading?: boolean;
+  fetchCourseLoading?: boolean;
 }
 
 const InfiniteScrollContent = ({ hasMore }: { hasMore?: boolean }) => (
@@ -32,48 +33,73 @@ const CatalogListPage: React.FC<CatalogListProps> = ({
   data = {},
   loading = false,
   match,
-  history,
+  fetchCourseLoading = false,
 }) => {
   const dispatch = useDispatch();
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  // 控制加载更多组件显示
+  const [hasMoreVisible, setHasMoreVisible] = useState(false);
 
   // @ts-ignore
   const { columnID, name } = match.params;
 
   const {
-    catalogList,
-    selectedCatalogIDs,
+    catalogList = [],
+    selectedCatalogIDs = [],
     courseList = [],
     coursePageIndex = 1,
     coursePageCount = 0,
   } = data;
 
-  useEffect(() => {
-    logger.debug('history: ', history);
-  }, [history]);
+  // 三级目录
+  const [catalogListLevelOne = [], catalogListLevelTwo = [], catalogListLevelThree = []] =
+    catalogList;
+  // 选中三级目录ID
+  const [selectedIDLevelOne, selectedIDLevelTwo, selectedIDLevelThree] = selectedCatalogIDs;
 
-  useEffect(() => {
-    logger.debug('match', match);
+  async function fetchAPI({
+    columnID: cid,
+    id,
+    level,
+  }: {
+    columnID?: number;
+    id?: number;
+    level: number;
+  }) {
+    setHasMoreVisible(false);
 
-    new Promise((resolve: (catalogIDs: number[]) => void, reject) => {
+    const catalogIDs = await new Promise((resolve: (catalogIDs: number[]) => void, reject) => {
       dispatch({
         type: 'courseList/fetchCourseCatalog',
         payload: {
-          level: -1,
-          columnID,
+          level,
+          columnID: cid,
+          id,
           areaID: '',
           resolve,
           reject,
         },
       });
-    }).then(catalogIDs => {
-      dispatch({
-        type: 'courseList/fetchCourseList',
-        payload: {
-          columnID: catalogIDs?.[2],
-        },
-      });
     });
+
+    await new Promise(
+      (resolve: ({ pageIndex, pageCount }: { pageIndex: number; pageCount: number }) => void) => {
+        dispatch({
+          type: 'courseList/fetchCourseList',
+          payload: {
+            columnID: catalogIDs?.[2],
+            resolve,
+          },
+        });
+      },
+    );
+
+    setHasMoreVisible(true);
+    setHasMore(true);
+  }
+
+  useEffect(() => {
+    fetchAPI({ columnID, level: -1 });
 
     setTitle(name);
   }, []);
@@ -81,28 +107,7 @@ const CatalogListPage: React.FC<CatalogListProps> = ({
   const onTabChange = (level, key) => {
     logger.info(`onTabChange: ${key}`);
 
-    new Promise((resolve: (catalogIDs: number[]) => void, reject) => {
-      dispatch({
-        type: 'courseList/fetchCourseCatalog',
-        payload: {
-          level,
-          id: key,
-          areaID: '',
-          resolve,
-          reject,
-        },
-      });
-    }).then(catalogIDs => {
-      setHasMore(true);
-
-      dispatch({
-        type: 'courseList/fetchCourseList',
-        payload: {
-          columnID: catalogIDs?.[2],
-          pageIndex: 1,
-        },
-      });
-    });
+    fetchAPI({ id: key, level });
   };
 
   const loadMore = async function () {
@@ -115,7 +120,6 @@ const CatalogListPage: React.FC<CatalogListProps> = ({
           type: 'courseList/fetchCourseList',
           payload: {
             columnID: selectedCatalogIDs?.[2],
-            pageIndex: coursePageIndex + 1,
             loadMore: true,
             resolve,
             reject,
@@ -135,44 +139,42 @@ const CatalogListPage: React.FC<CatalogListProps> = ({
   return (
     <LoadingToast loading={loading}>
       <div className={styles.container}>
-        <Tabs activeKey={`${selectedCatalogIDs?.[0]}`} onChange={key => onTabChange(0, key)}>
-          {catalogList?.[0] &&
-            catalogList?.[0].map(item => (
-              <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
-            ))}
+        <Tabs activeKey={`${selectedIDLevelOne}`} onChange={key => onTabChange(0, key)}>
+          {catalogListLevelOne.map(item => (
+            <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
+          ))}
         </Tabs>
-        <Tabs activeKey={`${selectedCatalogIDs?.[1]}`} onChange={key => onTabChange(1, key)}>
-          {catalogList?.[1] &&
-            catalogList?.[1]?.map(item => (
-              <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
-            ))}
+        <Tabs activeKey={`${selectedIDLevelTwo}`} onChange={key => onTabChange(1, key)}>
+          {catalogListLevelTwo.map(item => (
+            <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
+          ))}
         </Tabs>
         <Tabs
-          activeKey={`${selectedCatalogIDs?.[2]}`}
+          activeKey={`${selectedIDLevelThree}`}
           activeLineMode="fixed"
           style={{
             '--fixed-active-line-width': '50px',
           }}
           onChange={key => onTabChange(2, key)}
         >
-          {catalogList?.[2]
-            ? catalogList?.[2]?.map(item => (
-                <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
-              ))
-            : null}
+          {catalogListLevelThree.map(item => (
+            <Tabs.TabPane title={item.name} key={`${item.id}`}></Tabs.TabPane>
+          ))}
         </Tabs>
-        <div className={styles.list}>
-          <List>
-            {courseList.map(course => (
-              <List.Item key={course.id} onClick={() => history.push('/my')}>
-                {course.name}
-              </List.Item>
-            ))}
-          </List>
-          <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
-            <InfiniteScrollContent hasMore={hasMore} />
-          </InfiniteScroll>
-        </div>
+        <LoadingToast loading={fetchCourseLoading && !hasMoreVisible}>
+          <div className={styles.list}>
+            <List>
+              {courseList.map(course => (
+                <List.Item key={course.id}>{course.name}</List.Item>
+              ))}
+            </List>
+            {hasMoreVisible ? (
+              <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
+                <InfiniteScrollContent hasMore={hasMore} />
+              </InfiniteScroll>
+            ) : null}
+          </div>
+        </LoadingToast>
       </div>
     </LoadingToast>
   );
@@ -182,5 +184,6 @@ export default connect(
   ({ courseList, loading }: { courseList: ICourseListState; loading: Loading }) => ({
     data: courseList,
     loading: loading.effects['courseList/fetchCourseCatalog'],
+    fetchCourseLoading: loading.effects['courseList/fetchCourseList'],
   }),
 )(CatalogListPage);
