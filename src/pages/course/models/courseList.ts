@@ -243,10 +243,14 @@ const CourseListModel: ICourseListModel = {
         }
       }
 
+      // 获取用户id
+      const uid = yield select(({ user }) => user.currentUser?.id);
+
       const response: IFormatResponse<{
         list: IMedia[];
         pageCount: number;
       }> = yield call(fetchCourseList, {
+        uid,
         columnID,
         pageIndex,
         pageSize,
@@ -259,11 +263,7 @@ const CourseListModel: ICourseListModel = {
 
       if (!response.hasError) {
         const list = yield select(({ courseList }) => courseList.courseList);
-        let courseList = list
-          ? list.map(item => ({
-              name: item.name,
-            }))
-          : [];
+        let courseList = list ? [...list] : [];
         if (loadMore) {
           courseList = response?.data?.list
             ? [...courseList, ...response?.data?.list]

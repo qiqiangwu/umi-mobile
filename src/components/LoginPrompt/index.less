@@ -1,0 +1,37 @@
+.container {
+  width: auto;
+  left: 10px;
+  right: 10px;
+  bottom: 0;
+  background-color: transparent;
+
+  :global {
+    .inner {
+      background-color: var(--adm-color-white);
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 50px;
+    }
+    .title {
+      text-align: center;
+      padding-bottom: 24px;
+    }
+    .btns {
+      display: flex;
+      justify-content: space-around;
+
+      button {
+        --background-color: var(--adm-border-color);
+        --border-radius: 20px;
+        --border-width: 0;
+        --text-color: var(--adm-color-primary);
+
+        flex: 1;
+
+        &:first-child {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

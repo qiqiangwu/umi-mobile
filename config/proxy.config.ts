@@ -15,6 +15,11 @@ const ProConfig = {
 };
 
 export default {
+  '/api/EDUMS': {
+    target: 'http://www.bndtn.com:8564',
+    changeOrigin: true,
+    pathRewrite: { '^/api/EDUMS': 'EDUMS' },
+  },
   '/api/ancms_server_interface': {
     target: 'http://www.bndtn.com:8180',
     changeOrigin: true,

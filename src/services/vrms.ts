@@ -3,6 +3,10 @@ import { Get } from '@/utils/request';
 
 export interface GetMediasParams {
   /**
+   * 用户id
+   */
+  uid?: number;
+  /**
    * 栏目id
    */
   columnID: number;
